@@ -14,7 +14,7 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Back</span>
+            <span className="text-sm font-medium">Назад</span>
           </button>
 
           <div className="flex items-start gap-4">
@@ -34,7 +34,7 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
       <div className="flex-1 px-5 pb-4 overflow-y-auto space-y-5">
         {/* Skills covered */}
         <section>
-          <h2 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-3">Skills You'll Learn</h2>
+          <h2 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-3">Чему научишься</h2>
           <div className="flex flex-wrap gap-2">
             {lesson.skills.map((skill, i) => (
               <div
@@ -49,7 +49,7 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
 
         {/* Dialogue preview */}
         <section>
-          <h2 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-3">Dialogue</h2>
+          <h2 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-3">Диалог</h2>
           <div className="space-y-2">
             {lesson.dialogue.map((line) => (
               <div
@@ -75,7 +75,7 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
 
         {/* Practice phrases */}
         <section>
-          <h2 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-3">Practice Phrases</h2>
+          <h2 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-3">Фразы для практики</h2>
           <div className="space-y-2">
             {lesson.phrases.map((phrase) => (
               <div
@@ -98,12 +98,12 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
 
         {/* How it works */}
         <section className="bg-dark-700 rounded-2xl p-4 border border-dark-500">
-          <h2 className="text-white text-sm font-semibold mb-3">How This Lesson Works</h2>
+          <h2 className="text-white text-sm font-semibold mb-3">Как проходит урок</h2>
           <div className="space-y-2.5">
             {[
-              { icon: '👂', color: 'text-blue-400', label: 'LISTEN', desc: 'Hear the full dialogue' },
-              { icon: '🎤', color: 'text-violet-400', label: 'REPEAT', desc: 'Record yourself repeating' },
-              { icon: '💬', color: 'text-emerald-400', label: 'SAY', desc: 'Translate and speak' },
+              { icon: '👂', color: 'text-blue-400', label: 'СЛУШАЙ', desc: 'слушай весь диалог' },
+              { icon: '🎤', color: 'text-violet-400', label: 'ПОВТОРЯЙ', desc: 'записывай себя' },
+              { icon: '💬', color: 'text-emerald-400', label: 'ГОВОРИ', desc: 'переводи и произноси' },
             ].map((phase) => (
               <div key={phase.label} className="flex items-center gap-3">
                 <span className="text-xl">{phase.icon}</span>
@@ -124,7 +124,7 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
           className="w-full bg-gradient-to-r from-violet-600 to-violet-500 text-white font-bold text-lg rounded-2xl py-4
                      active:scale-95 transition-all duration-150 shadow-lg glow-purple"
         >
-          Start Lesson
+          Начать урок
         </button>
       </div>
     </div>

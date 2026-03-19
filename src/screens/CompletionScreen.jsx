@@ -48,13 +48,13 @@ export default function CompletionScreen({ lesson, streak, onHome }) {
           <span className="text-5xl">🏆</span>
         </div>
 
-        <h1 className="text-white text-3xl font-bold mb-2">Lesson Complete!</h1>
+        <h1 className="text-white text-3xl font-bold mb-2">Урок завершён!</h1>
         <p className="text-gray-400 text-base mb-8">{lesson.subtitle}</p>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 w-full mb-8">
           {[
-            { icon: '🔥', label: 'Streak', value: `${streak} day${streak !== 1 ? 's' : ''}` },
+            { icon: '🔥', label: 'Streak', value: `${streak} дней` },
             { icon: '⭐', label: 'XP Earned', value: '+15 XP' },
             { icon: '✅', label: 'Phrases', value: `${lesson.phrases.length}/${lesson.phrases.length}` },
           ].map((stat) => (
@@ -97,7 +97,7 @@ export default function CompletionScreen({ lesson, streak, onHome }) {
           className="w-full bg-gradient-to-r from-violet-600 to-violet-500 text-white font-bold text-lg rounded-2xl py-4
                      active:scale-95 transition-all duration-150 shadow-lg glow-purple"
         >
-          Back to Lessons
+          Назад к урокам
         </button>
       </div>
     </div>

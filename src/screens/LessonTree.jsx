@@ -64,8 +64,8 @@ export default function LessonTree({ streak, onSelectLesson }) {
       {/* Progress bar */}
       <div className="px-5 mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-400 text-xs font-medium">UNIT 1 — BASICS</span>
-          <span className="text-violet-400 text-xs font-medium">1/5 lessons</span>
+          <span className="text-gray-400 text-xs font-medium">Урок 1 — Основы</span>
+          <span className="text-violet-400 text-xs font-medium">1/5 уроков</span>
         </div>
         <div className="w-full bg-dark-600 rounded-full h-2">
           <div className="bg-gradient-to-r from-violet-500 to-violet-400 h-2 rounded-full w-[20%] transition-all duration-500" />
@@ -167,7 +167,7 @@ export default function LessonTree({ streak, onSelectLesson }) {
       <div className="px-5 pb-8 pt-4">
         <div className="bg-dark-700 rounded-2xl p-4 border border-dark-500">
           <p className="text-gray-400 text-sm text-center">
-            Complete lessons to unlock new content
+            Завершите уроки, чтобы открыть новый контент
           </p>
         </div>
       </div>

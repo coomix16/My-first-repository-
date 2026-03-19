@@ -476,7 +476,7 @@ function SayPhase({ lesson, onComplete }) {
             ${revealed ? 'flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg' : 'hidden'}
           `}
         >
-          {isLast ? 'Finish Lesson 🎉' : 'Next →'}
+          {isLast ? 'Завершить урок 🎉' : 'Next →'}
         </button>
       </div>
     </div>
