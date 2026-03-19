@@ -124,5 +124,5 @@ export function checkPronunciation(spoken, target) {
   const matches = targetWords.filter(w => spokenWords.includes(w));
   const score = Math.round((matches.length / targetWords.length) * 100);
 
-  return { score, pass: score >= 60 };
+  return { score, pass: score >= 80 };
 }

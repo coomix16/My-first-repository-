@@ -1,4 +1,3 @@
-import { LESSONS } from '../data/lessons';
 import StreakBadge from '../components/StreakBadge';
 
 function LessonNode({ lesson, index, onSelect }) {
@@ -47,8 +46,9 @@ function LessonNode({ lesson, index, onSelect }) {
   );
 }
 
-export default function LessonTree({ streak, onSelectLesson }) {
-  const totalNodes = LESSONS.length;
+export default function LessonTree({ lessons, completedCount, streak, onSelectLesson }) {
+  const totalNodes = lessons.length;
+  const progressCount = Math.min(completedCount + 1, totalNodes);
 
   return (
     <div className="flex flex-col min-h-screen bg-dark-900">
@@ -65,10 +65,13 @@ export default function LessonTree({ streak, onSelectLesson }) {
       <div className="px-5 mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-400 text-xs font-medium">Урок 1 — Основы</span>
-          <span className="text-violet-400 text-xs font-medium">1/5 уроков</span>
+          <span className="text-violet-400 text-xs font-medium">{progressCount}/{totalNodes} уроков</span>
         </div>
         <div className="w-full bg-dark-600 rounded-full h-2">
-          <div className="bg-gradient-to-r from-violet-500 to-violet-400 h-2 rounded-full w-[20%] transition-all duration-500" />
+          <div
+            className="bg-gradient-to-r from-violet-500 to-violet-400 h-2 rounded-full transition-all duration-500"
+            style={{ width: `${(progressCount / totalNodes) * 100}%` }}
+          />
         </div>
       </div>
 
@@ -101,7 +104,7 @@ export default function LessonTree({ streak, onSelectLesson }) {
           </svg>
 
           {/* Lesson nodes */}
-          {LESSONS.map((lesson, index) => (
+          {lessons.map((lesson, index) => (
             <div
               key={lesson.id}
               className="absolute"

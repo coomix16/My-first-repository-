@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNotifications } from '../hooks/useNotifications';
 
+function formatDays(n) {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return `${n} дней`;
+  if (mod10 === 1) return `${n} день`;
+  if (mod10 >= 2 && mod10 <= 4) return `${n} дня`;
+  return `${n} дней`;
+}
+
 export default function CompletionScreen({ lesson, streak, onHome }) {
   const { permission, requestPermission } = useNotifications();
   const [askedNotif, setAskedNotif] = useState(false);
@@ -54,9 +63,9 @@ export default function CompletionScreen({ lesson, streak, onHome }) {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 w-full mb-8">
           {[
-            { icon: '🔥', label: 'Streak', value: `${streak} дней` },
-            { icon: '⭐', label: 'XP Earned', value: '+15 XP' },
-            { icon: '✅', label: 'Phrases', value: `${lesson.phrases.length}/${lesson.phrases.length}` },
+            { icon: '🔥', label: 'Серия', value: formatDays(streak) },
+            { icon: '⭐', label: 'Очков получено', value: '+15 XP' },
+            { icon: '✅', label: 'Фраз', value: `${lesson.phrases.length}/${lesson.phrases.length}` },
           ].map((stat) => (
             <div key={stat.label} className="bg-dark-700 rounded-2xl p-3 border border-dark-500">
               <div className="text-2xl mb-1">{stat.icon}</div>
@@ -69,14 +78,14 @@ export default function CompletionScreen({ lesson, streak, onHome }) {
         {/* Notification prompt */}
         {permission !== 'granted' && !askedNotif && (
           <div className="w-full bg-gradient-to-r from-violet-900/50 to-violet-800/30 border border-violet-700/50 rounded-2xl p-4 mb-4">
-            <p className="text-white text-sm font-semibold mb-1">Never miss a day 🔔</p>
-            <p className="text-gray-400 text-xs mb-3">Get a daily reminder to keep your streak alive</p>
+            <p className="text-white text-sm font-semibold mb-1">Не пропускай ни дня 🔔</p>
+            <p className="text-gray-400 text-xs mb-3">Включи напоминание чтобы сохранить серию</p>
             <button
               onClick={handleEnableNotifications}
               className="w-full bg-violet-600 text-white text-sm font-semibold rounded-xl py-2.5
                          active:scale-95 transition-all duration-150"
             >
-              Enable Daily Reminders
+              Включить напоминания
             </button>
           </div>
         )}
@@ -84,7 +93,7 @@ export default function CompletionScreen({ lesson, streak, onHome }) {
         {notifGranted && (
           <div className="w-full bg-emerald-900/30 border border-emerald-700/50 rounded-2xl p-3 mb-4 slide-up">
             <p className="text-emerald-400 text-sm font-medium text-center">
-              ✅ You'll get daily reminders!
+              ✅ Напоминания включены!
             </p>
           </div>
         )}

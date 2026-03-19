@@ -49,7 +49,7 @@ function ListenPhase({ lesson, onComplete }) {
             {line.speaker}
           </div>
           <span className={`text-sm font-medium ${line.speaker === 'A' ? 'text-violet-300' : 'text-emerald-300'}`}>
-            Speaker {line.speaker}
+            Говорящий {line.speaker}
           </span>
         </div>
       </div>
@@ -89,7 +89,7 @@ function ListenPhase({ lesson, onComplete }) {
             </svg>
           )}
         </button>
-        <p className="text-gray-500 text-xs">{isSpeaking ? 'Playing...' : 'Tap to replay'}</p>
+        <p className="text-gray-500 text-xs">{isSpeaking ? 'Воспроизводится...' : 'Нажми для повтора'}</p>
 
         {/* Progress dots */}
         <div className="flex gap-2 mt-6">
@@ -111,7 +111,7 @@ function ListenPhase({ lesson, onComplete }) {
         className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base rounded-2xl py-4
                    active:scale-95 transition-all duration-150 shadow-lg"
       >
-        {isLast ? 'Continue to Practice →' : 'Next →'}
+        {isLast ? 'Продолжить →' : 'Далее →'}
       </button>
     </div>
   );
@@ -180,11 +180,17 @@ function RepeatPhase({ lesson, onComplete }) {
     }
   };
 
+  const handleRetry = () => {
+    setResult(null);
+    setState('idle');
+    playPhrase();
+  };
+
   return (
     <div className="flex flex-col flex-1 fade-in">
       {/* Instruction */}
       <div className="text-center mb-6">
-        <p className="text-gray-400 text-sm">Listen, then repeat what you hear</p>
+        <p className="text-gray-400 text-sm">Слушай, потом повторяй</p>
       </div>
 
       {/* Main content */}
@@ -222,15 +228,15 @@ function RepeatPhase({ lesson, onComplete }) {
             result.pass ? 'bg-emerald-900/30 border border-emerald-700/50' : 'bg-red-900/30 border border-red-700/50'
           }`}>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">{result.pass ? '✅' : '❌'}</span>
+              <span className="text-xl">{result.score === 100 ? '✅' : result.pass ? '👍' : '❌'}</span>
               <span className={`font-bold text-sm ${result.pass ? 'text-emerald-400' : 'text-red-400'}`}>
-                {result.pass ? 'Great job!' : 'Try again'}
+                {result.score === 100 ? 'Отлично!' : result.pass ? 'Хорошо! Можешь повторить для 100%' : 'Попробуй снова'}
               </span>
               <span className="ml-auto text-sm font-bold text-gray-300">{result.score}%</span>
             </div>
             {transcript && (
               <p className="text-gray-400 text-xs mt-1">
-                You said: "<span className="text-gray-200">{transcript}</span>"
+                Вы сказали: "<span className="text-gray-200">{transcript}</span>"
               </p>
             )}
           </div>
@@ -273,7 +279,7 @@ function RepeatPhase({ lesson, onComplete }) {
           </button>
         </div>
         <p className="text-gray-500 text-xs mt-3">
-          {isListening ? 'Listening... tap to stop' : 'Tap mic to record'}
+          {isListening ? 'Запись... нажми для остановки' : 'Нажми для записи'}
         </p>
 
         {/* Progress dots */}
@@ -291,20 +297,37 @@ function RepeatPhase({ lesson, onComplete }) {
       </div>
 
       {/* Next button */}
-      <button
-        onClick={handleNext}
-        disabled={!result && !error}
-        className={`
-          w-full font-bold text-base rounded-2xl py-4
-          transition-all duration-150 active:scale-95
-          ${(result || error)
-            ? 'bg-gradient-to-r from-violet-600 to-violet-500 text-white shadow-lg'
-            : 'bg-dark-600 text-gray-500 cursor-not-allowed'
-          }
-        `}
-      >
-        {isLast ? 'Continue to Final Phase →' : 'Next →'}
-      </button>
+      {result && result.pass && result.score < 100 ? (
+        <div className="flex gap-3">
+          <button
+            onClick={handleRetry}
+            className="flex-1 bg-dark-600 border border-dark-500 text-gray-400 font-medium text-sm rounded-2xl py-4 active:scale-95 transition-all duration-150"
+          >
+            Повторить
+          </button>
+          <button
+            onClick={handleNext}
+            className="flex-1 bg-gradient-to-r from-violet-600 to-violet-500 text-white font-bold text-base rounded-2xl py-4 active:scale-95 transition-all duration-150 shadow-lg"
+          >
+            Продолжить
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={handleNext}
+          disabled={!error && (!result || !result.pass)}
+          className={`
+            w-full font-bold text-base rounded-2xl py-4
+            transition-all duration-150 active:scale-95
+            ${(result?.pass || error)
+              ? 'bg-gradient-to-r from-violet-600 to-violet-500 text-white shadow-lg'
+              : 'bg-dark-600 text-gray-500 cursor-not-allowed'
+            }
+          `}
+        >
+          {isLast ? 'Продолжить →' : 'Далее →'}
+        </button>
+      )}
     </div>
   );
 }
@@ -354,18 +377,22 @@ function SayPhase({ lesson, onComplete }) {
     }
   };
 
+  const handleRetry = () => {
+    setResult(null);
+  };
+
   return (
     <div className="flex flex-col flex-1 fade-in">
       {/* Instruction */}
       <div className="text-center mb-6">
-        <p className="text-gray-400 text-sm">Say the English phrase for the Russian below</p>
+        <p className="text-gray-400 text-sm">Произнеси английскую фразу к русскому тексту</p>
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col items-center justify-center">
         {/* Russian prompt */}
         <div className="w-full bg-dark-700 rounded-3xl p-6 border border-orange-900/40 mb-4">
-          <p className="text-orange-300 text-xs uppercase tracking-wider font-semibold mb-2 text-center">Translate to English</p>
+          <p className="text-orange-300 text-xs uppercase tracking-wider font-semibold mb-2 text-center">Переведи на английский</p>
           <p className="text-white text-3xl font-bold text-center leading-relaxed">
             {phrase.russian}
           </p>
@@ -377,7 +404,7 @@ function SayPhase({ lesson, onComplete }) {
             ? 'bg-dark-700 border-dark-500'
             : 'bg-dark-800 border-dark-600 opacity-50'
         }`}>
-          <p className="text-gray-500 text-xs text-center mb-1">English</p>
+          <p className="text-gray-500 text-xs text-center mb-1">Английский</p>
           <p className={`text-xl font-medium text-center ${revealed ? 'text-white' : 'text-transparent select-none'}`}
              style={!revealed ? { textShadow: '0 0 8px rgba(255,255,255,0.3)' } : {}}>
             {phrase.english}
@@ -390,15 +417,15 @@ function SayPhase({ lesson, onComplete }) {
             result.pass ? 'bg-emerald-900/30 border border-emerald-700/50' : 'bg-orange-900/30 border border-orange-700/50'
           }`}>
             <div className="flex items-center gap-2">
-              <span className="text-xl">{result.pass ? '🎉' : '💪'}</span>
+              <span className="text-xl">{result.score === 100 ? '🎉' : result.pass ? '👍' : '💪'}</span>
               <span className={`font-bold text-sm ${result.pass ? 'text-emerald-400' : 'text-orange-400'}`}>
-                {result.pass ? 'Excellent!' : 'Keep practicing!'}
+                {result.score === 100 ? 'Отлично!' : result.pass ? 'Хорошо! Можешь повторить для 100%' : 'Попробуй снова'}
               </span>
               <span className="ml-auto text-sm font-bold text-gray-300">{result.score}%</span>
             </div>
             {transcript && (
               <p className="text-gray-400 text-xs mt-1">
-                You said: "<span className="text-gray-200">{transcript}</span>"
+                Вы сказали: "<span className="text-gray-200">{transcript}</span>"
               </p>
             )}
           </div>
@@ -440,7 +467,7 @@ function SayPhase({ lesson, onComplete }) {
           </button>
         </div>
         <p className="text-gray-500 text-xs mt-3">
-          {isListening ? 'Listening... tap to stop' : 'Tap mic to answer'}
+          {isListening ? 'Запись... нажми для остановки' : 'Нажми для ответа'}
         </p>
 
         {/* Progress dots */}
@@ -457,28 +484,52 @@ function SayPhase({ lesson, onComplete }) {
         </div>
       </div>
 
-      {/* Next / Skip button */}
-      <div className="flex gap-3">
-        {!revealed && (
+      {/* Bottom action buttons */}
+      {result && result.pass && result.score < 100 ? (
+        <div className="flex gap-3">
           <button
-            onClick={() => setRevealed(true)}
-            className="flex-1 bg-dark-600 border border-dark-500 text-gray-400 font-medium text-sm rounded-2xl py-4
-                       active:scale-95 transition-all duration-150"
+            onClick={handleRetry}
+            className="flex-1 bg-dark-600 border border-dark-500 text-gray-400 font-medium text-sm rounded-2xl py-4 active:scale-95 transition-all duration-150"
           >
-            Show Answer
+            Повторить
           </button>
-        )}
+          <button
+            onClick={handleNext}
+            className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-base rounded-2xl py-4 active:scale-95 transition-all duration-150 shadow-lg"
+          >
+            Продолжить
+          </button>
+        </div>
+      ) : result && !result.pass ? (
         <button
-          onClick={handleNext}
-          disabled={!revealed}
-          className={`
-            font-bold text-base rounded-2xl py-4 transition-all duration-150 active:scale-95
-            ${revealed ? 'flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg' : 'hidden'}
-          `}
+          onClick={handleRetry}
+          className="w-full bg-dark-600 border border-dark-500 text-gray-400 font-medium text-sm rounded-2xl py-4 active:scale-95 transition-all duration-150"
         >
-          {isLast ? 'Завершить урок 🎉' : 'Next →'}
+          Повторить
         </button>
-      </div>
+      ) : (
+        <div className="flex gap-3">
+          {!revealed && (
+            <button
+              onClick={() => setRevealed(true)}
+              className="flex-1 bg-dark-600 border border-dark-500 text-gray-400 font-medium text-sm rounded-2xl py-4
+                         active:scale-95 transition-all duration-150"
+            >
+              Показать ответ
+            </button>
+          )}
+          <button
+            onClick={handleNext}
+            disabled={!revealed}
+            className={`
+              font-bold text-base rounded-2xl py-4 transition-all duration-150 active:scale-95
+              ${revealed ? 'flex-1 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg' : 'hidden'}
+            `}
+          >
+            {isLast ? 'Завершить урок 🎉' : 'Далее →'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -486,9 +537,9 @@ function SayPhase({ lesson, onComplete }) {
 // ─── Main Lesson Screen ────────────────────────────────────────────────────────
 
 const PHASES = [
-  { key: 'listen', label: 'LISTEN', icon: '👂', color: 'text-blue-400', bgActive: 'bg-blue-600' },
-  { key: 'repeat', label: 'REPEAT', icon: '🎤', color: 'text-violet-400', bgActive: 'bg-violet-600' },
-  { key: 'say', label: 'SAY', icon: '💬', color: 'text-emerald-400', bgActive: 'bg-emerald-600' },
+  { key: 'listen', label: 'СЛУШАЙ', icon: '👂', color: 'text-blue-400', bgActive: 'bg-blue-600' },
+  { key: 'repeat', label: 'ПОВТОРЯЙ', icon: '🎤', color: 'text-violet-400', bgActive: 'bg-violet-600' },
+  { key: 'say', label: 'ГОВОРИ', icon: '💬', color: 'text-emerald-400', bgActive: 'bg-emerald-600' },
 ];
 
 export default function LessonScreen({ lesson, onComplete, onBack }) {

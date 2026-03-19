@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useStreak } from './hooks/useStreak';
+import { useLessons } from './hooks/useLessons';
 import LessonTree from './screens/LessonTree';
 import LessonPreview from './screens/LessonPreview';
 import LessonScreen from './screens/LessonScreen';
@@ -14,6 +15,7 @@ const SCREEN = {
 
 export default function App() {
   const { streak, incrementStreak } = useStreak();
+  const { lessons, completeLesson, completedCount } = useLessons();
   const [screen, setScreen] = useState(SCREEN.TREE);
   const [selectedLesson, setSelectedLesson] = useState(null);
 
@@ -27,6 +29,9 @@ export default function App() {
   };
 
   const handleLessonComplete = () => {
+    if (selectedLesson) {
+      completeLesson(selectedLesson.id);
+    }
     incrementStreak();
     setScreen(SCREEN.COMPLETE);
   };
@@ -40,6 +45,8 @@ export default function App() {
     <div className="max-w-md mx-auto min-h-screen bg-dark-900 relative">
       {screen === SCREEN.TREE && (
         <LessonTree
+          lessons={lessons}
+          completedCount={completedCount}
           streak={streak}
           onSelectLesson={handleSelectLesson}
         />
