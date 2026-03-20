@@ -104,7 +104,11 @@ export default function LessonTree({ lessons, completedCount, streak, onSelectLe
           </svg>
 
           {/* Lesson nodes */}
-          {lessons.map((lesson, index) => (
+          {lessons.map((lesson, index) => {
+            const isPreviewLocked = lesson.locked && index <= completedCount + 5;
+            const isHardLocked = lesson.locked && index > completedCount + 5;
+
+            return (
             <div
               key={lesson.id}
               className="absolute"
@@ -122,23 +126,30 @@ export default function LessonTree({ lessons, completedCount, streak, onSelectLe
                   }`}
                 >
                   <button
-                    onClick={() => !lesson.locked && onSelectLesson(lesson)}
-                    disabled={lesson.locked}
+                    onClick={() => !isHardLocked && onSelectLesson(lesson)}
+                    disabled={isHardLocked}
                     className={`
                       w-20 h-20 rounded-2xl flex flex-col items-center justify-center relative
                       transition-all duration-200 active:scale-95
-                      ${lesson.locked
-                        ? 'bg-dark-700 border-2 border-dark-500 cursor-not-allowed'
-                        : 'bg-gradient-to-br from-violet-500 to-violet-700 cursor-pointer hover:scale-105 glow-purple shadow-lg'
+                      ${isHardLocked
+                        ? 'bg-dark-700 border-2 border-dark-500 cursor-not-allowed opacity-50'
+                        : isPreviewLocked
+                          ? 'bg-dark-700 border-2 border-dark-400 cursor-pointer hover:scale-105 hover:border-violet-500'
+                          : 'bg-gradient-to-br from-violet-500 to-violet-700 cursor-pointer hover:scale-105 glow-purple shadow-lg'
                       }
                     `}
                   >
                     {lesson.locked ? (
                       <>
-                        <svg className="w-7 h-7 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className={`w-7 h-7 ${isHardLocked ? 'text-gray-600' : 'text-gray-400'}`}
+                          fill="currentColor" viewBox="0 0 20 20"
+                        >
                           <path fillRule="evenodd" d="M10 2a4 4 0 00-4 4v2H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-1V6a4 4 0 00-4-4zm0 2a2 2 0 00-2 2v2h4V6a2 2 0 00-2-2z" clipRule="evenodd" />
                         </svg>
-                        <span className="text-gray-500 text-[10px] font-bold mt-1">{lesson.title}</span>
+                        <span className={`text-[10px] font-bold mt-1 ${isHardLocked ? 'text-gray-600' : 'text-gray-400'}`}>
+                          {lesson.title}
+                        </span>
                       </>
                     ) : (
                       <>
@@ -148,13 +159,17 @@ export default function LessonTree({ lessons, completedCount, streak, onSelectLe
                     )}
                   </button>
 
-                  {/* Tooltip for unlocked */}
-                  {!lesson.locked && (
+                  {/* Tooltip for unlocked and preview-locked */}
+                  {!isHardLocked && (
                     <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap z-10">
-                      <div className="bg-violet-600 text-white text-xs rounded-xl px-3 py-1.5 font-semibold shadow-lg">
+                      <div className={`text-white text-xs rounded-xl px-3 py-1.5 font-semibold shadow-lg ${
+                        isPreviewLocked ? 'bg-gray-700' : 'bg-violet-600'
+                      }`}>
                         {lesson.subtitle}
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">
-                          <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-violet-600" />
+                          <div className={`w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent ${
+                            isPreviewLocked ? 'border-t-gray-700' : 'border-t-violet-600'
+                          }`} />
                         </div>
                       </div>
                     </div>
@@ -162,7 +177,8 @@ export default function LessonTree({ lessons, completedCount, streak, onSelectLe
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

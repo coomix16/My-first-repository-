@@ -120,11 +120,15 @@ export default function LessonPreview({ lesson, onStart, onBack }) {
       {/* Start button */}
       <div className="px-5 py-5 safe-area-inset">
         <button
-          onClick={onStart}
-          className="w-full bg-gradient-to-r from-violet-600 to-violet-500 text-white font-bold text-lg rounded-2xl py-4
-                     active:scale-95 transition-all duration-150 shadow-lg glow-purple"
+          onClick={lesson.locked ? undefined : onStart}
+          disabled={lesson.locked}
+          className={`w-full font-bold text-lg rounded-2xl py-4 transition-all duration-150 ${
+            lesson.locked
+              ? 'bg-dark-700 border border-dark-500 text-gray-500 cursor-not-allowed'
+              : 'bg-gradient-to-r from-violet-600 to-violet-500 text-white active:scale-95 shadow-lg glow-purple'
+          }`}
         >
-          Начать урок
+          {lesson.locked ? 'Сначала пройди предыдущий урок' : 'Начать урок'}
         </button>
       </div>
     </div>
